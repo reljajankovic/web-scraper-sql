@@ -65,6 +65,8 @@ class AsyncScraper:
                     async with pool.acquire() as conn:
                         async with conn.cursor() as cur:
                             await cur.execute(
+                                
+                                ## Pakao boziji nz kako cu da ucinim da moze da prima x broj column-a i da generise nove column-e kada ne postoje u MySQL, vrv cu se upucati tad
                                 f"INSERT INTO scraped_links (url, {self.sql_column}) VALUES (%s, %s)",
                                 (url, content)
                             )
