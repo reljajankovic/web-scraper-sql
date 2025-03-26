@@ -50,7 +50,7 @@ class AsyncScraper:
                 cleaned_url = cleaned_url.rstrip('/')
 
                 async with self.lock:
-                    if cleaned_url not in self.discovered_urls:
+                    if cleaned_url not in self.discovered_urls and self.start_url in cleaned_url:
                         self.discovered_urls.add(cleaned_url)
                         await self.url_queue.put(cleaned_url)
 
@@ -66,7 +66,6 @@ class AsyncScraper:
                         async with conn.cursor() as cur:
                             await cur.execute(
                                 
-                                ## Pakao boziji nz kako cu da ucinim da moze da prima x broj column-a i da generise nove column-e kada ne postoje u MySQL, vrv cu se upucati tad
                                 f"INSERT INTO scraped_links (url, {self.sql_column}) VALUES (%s, %s)",
                                 (url, content)
                             )
