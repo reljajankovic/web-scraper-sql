@@ -38,7 +38,6 @@ class ScraperGUI(QMainWindow):
             hbox = QHBoxLayout()
             hbox.addWidget(QLabel(label_text))
 
-            ## Jebo sam mu mater u usta smrdljiva dok sam nasao ovu smrdljivu gresku sa textChanged mrs u kurac
             field.textChanged.connect(lambda text, k=key: self.update_input(k, text))
             hbox.addWidget(field)
             input_layout.addLayout(hbox)
@@ -55,18 +54,24 @@ class ScraperGUI(QMainWindow):
         main_layout.addWidget(self.submit_btn, alignment=Qt.AlignmentFlag.AlignRight)
         
         self.input_start_url.setPlaceholderText("https://books.toscrape.com")
-        self.input_sql_variable.setPlaceholderText("price")
+        self.input_sql_variable.setPlaceholderText("sql_column_example")
         self.input_html_element.setPlaceholderText("p")
-        self.input_class_id.setPlaceholderText("price_color")
+        self.input_class_id.setPlaceholderText("class_id_example")
 
     def update_input(self, key, text):
         self.inputs[key] = text.strip()
 
     def validate_inputs(self):
-        if all(self.inputs.values()):
+        required_keys = ['start_url', 'sql_variable', 'html_element']
+        if all(self.inputs.get(key, '').strip() for key in required_keys):
             self.close()
         else:
-            QMessageBox.warning(self, "Error", "Please fill all fields!")
+            QMessageBox.warning(self, "Error", "Please fill all required fields!")
 
     def get_inputs(self):
-        return self.inputs
+        return {
+        'start_url': self.inputs['start_url'],
+        'sql_variable': self.inputs['sql_variable'],
+        'html_element': self.inputs['html_element'],
+        'class_id': self.inputs['class_id'] or None 
+    }
